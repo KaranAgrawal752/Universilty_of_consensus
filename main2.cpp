@@ -1,4 +1,4 @@
-#include "Universal.h"
+#include "LFUniversal.h"
 #include <iostream>
 #include <vector>
 #include <pthread.h> // Include pthread header
@@ -8,7 +8,7 @@ using namespace std;
 
 
 struct ThreadArgs {
-    Universal* univ_obj;
+    LFUniversal* univ_obj;
     Invoc* invoc_obj;
     int id;
 };
@@ -17,7 +17,7 @@ void* threadFunction(void * args_ptr) {
     ThreadArgs* args = static_cast<ThreadArgs*>(args_ptr);
 
     // Accessing univ_obj and invoc_obj from args
-    Universal* univ_obj = args->univ_obj;
+    LFUniversal* univ_obj = args->univ_obj;
     Invoc* invoc_obj = args->invoc_obj;
     int id=args->id;
     Response resp=univ_obj->apply(*invoc_obj,id);
@@ -29,7 +29,7 @@ void* threadFunction(void * args_ptr) {
 int main() {
     cout<<"main started\n";
     int N= 10;
-    Universal* univ_obj=new Universal(N);
+    LFUniversal* univ_obj=new LFUniversal(N);
     pthread_t myThread;
     vector<Invoc*> invoc_obj(N);
 
@@ -52,12 +52,12 @@ int main() {
     }
 
     // // Wait for all threads to finish execution
-    for (int i = 0; i < N; i++) {
-        if (pthread_join(myThread, NULL)) {
-            cerr << "Error joining thread." << endl;
-            return 1;
-        }
-    }
+    // for (int i = 0; i < N; i++) {
+    //     if (pthread_join(myThread, nullptr)) {
+    //         cerr << "Error joining thread." << endl;
+    //         return 1;
+    //     }
+    // }
 
     return 0;
 }
