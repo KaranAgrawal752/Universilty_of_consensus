@@ -14,7 +14,7 @@ private:
 public:
     std::map<int,int> mp;
     Universal(int n);
-    Response apply(Invoc invoc);
+    Response apply(Invoc invoc,int id);
 };
 
 

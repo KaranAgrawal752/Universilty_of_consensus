@@ -8,7 +8,7 @@ using namespace std;
 template<typename T>
 class Consensus {
 public:
-    virtual T decide(T value) =0; // Pure virtual function
+    virtual T decide(T value,int id) =0; // Pure virtual function
 };
 
 template<typename T>
@@ -23,14 +23,12 @@ public:
         this->n=_n;
         this->proposed.resize(this->n);
     }
-    virtual void propose(T value) {
+    virtual void propose(T value,int id) {
         // Implement the proposal logic here
-        pthread_t tid = pthread_self();
         // Convert the thread ID to an index in the proposed array
-        size_t index = (size_t)tid % this->n;
-        proposed[index] = value;
+        proposed[id] = value;
     }
 
-    virtual T decide(T value)=0; // Pure virtual function
+    virtual T decide(T value,int id)=0; // Pure virtual function
 };
 #endif // CONSENSUSPROTOCOL_H

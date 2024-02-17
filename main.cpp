@@ -20,7 +20,7 @@ void* threadFunction(void * args_ptr) {
     Universal* univ_obj = args->univ_obj;
     Invoc* invoc_obj = args->invoc_obj;
     int id=args->id;
-    Response resp=univ_obj->apply(*invoc_obj);
+    Response resp=univ_obj->apply(*invoc_obj,id);
     vector<int> res=resp.getArguments();
     cout<<"Thread id: "<<res[0]<<"  Seq in Consensus: "<<res[1]<<endl;
     return nullptr;

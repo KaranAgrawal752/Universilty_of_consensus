@@ -16,46 +16,43 @@ Universal::Universal(int n) {
     // cout<<head.size()<<"\n"<<announce.size()<<"\n";
 }
 
-Response Universal::apply(Invoc invoc) {
+Response Universal::apply(Invoc invoc,int id) {
     // Get the thread ID
     // cout<<"a";
-    pthread_t self = pthread_self();
     
     // Loop through the array of threads to find the index of the current thread
-    int i=(int)self%this->n;
     // for (i = 0; i < n; i++) {
     //     if (pthread_equal(threads[i], self)) {
     //         break;
     //     }
     // }
     // cout<<i<<"Hello";
-    announce[i] =new Node(invoc, this->n);
-    // announce[i].decideNext.n=this->n;
-    head[i] = Node::max(head);
-    while (announce[i]->seq == 0) {
-        Node* before = head[i];
+    announce[id] =new Node(invoc, this->n);
+    head[id] = Node::max(head);
+    while (announce[id]->seq == 0) {
+        Node* before = head[id];
         Node* help = announce[(before->seq + 1) %this->n];
         Node* prefer;
         if (help->seq == 0)
             prefer = help;
         else
-            prefer = announce[i];
-        Node* after = before->decideNext.decide(prefer);
+            prefer = announce[id];
+        Node* after = before->decideNext.decide(prefer,id);
         before->next = after;
         after->seq = before->seq + 1;
-        head[i] = after;
+        head[id] = after;
     }
     SeqObject MyObject=SeqObject();
     Node* current = tail->next;
-    while (current != announce[i]) {
+    while (current != announce[id]) {
         MyObject.apply(current->invoc);
         current = current->next;
     }
-    head[i] = announce[i];
+    head[id] = announce[id];
     MyObject.apply(current->invoc);
     Response rsp;
-    rsp.addArgument((int)self%this->n);
-    rsp.addArgument(head[i]->seq);
+    rsp.addArgument(id);
+    rsp.addArgument(head[id]->seq);
     return rsp;
     // vector<int> tmp={self%this->n,head[i]->seq};
     // return tmp;

@@ -19,8 +19,8 @@ public:
         r=FIRST;
     }
 
-    void propose(T value) override;
-    T decide(T value) override;
+    void propose(T value,int id) override;
+    T decide(T value,int id) override;
     bool compare_exchange(int* addr, int expected, int desired);
 };
 

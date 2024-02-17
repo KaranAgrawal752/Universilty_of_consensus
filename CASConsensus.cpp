@@ -4,17 +4,16 @@ template class CASConsensus<Node*>;
 
 using namespace std;
 template<typename T>
-void CASConsensus<T>::propose(T value) {
+void CASConsensus<T>::propose(T value,int id) {
     // Implement the proposal logic here
-    this->proposed[(int)pthread_self()%this->n] = value;
+    this->proposed[id] = value;
 }
 
 template<typename T>
-T CASConsensus<T>::decide(T value) {
-    propose(value);
-    int i =(int)pthread_self()%this->n;
-    if (compare_exchange(&r,FIRST, i)) // I won
-        return this->proposed[i];
+T CASConsensus<T>::decide(T value,int id) {
+    propose(value,id);
+    if (compare_exchange(&r,FIRST, id)) // I won
+        return this->proposed[id];
     else // I lost
         return this->proposed[r];
 }
