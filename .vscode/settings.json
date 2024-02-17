@@ -1,0 +1,9 @@
+{
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.associations": {
+        "*.ejs": "html",
+        "vector": "cpp",
+        "iostream": "cpp",
+        "map": "cpp"
+    }
+}
