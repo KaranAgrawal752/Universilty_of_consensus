@@ -2,7 +2,7 @@
 #define LFUNIVERSAL_H
 #include<map>
 #include <vector>
-#include "Node.h"
+#include "../Node.h"
 
 class LFUniversal {
 private:
@@ -11,7 +11,6 @@ private:
     Node* tail;
 
 public:
-    std::map<int,int> mp;
     LFUniversal(int n);
     Response apply(Invoc invoc,int id);
 };

@@ -1,6 +1,7 @@
 #include "Universal.h"
 #include <iostream>
 #include <pthread.h> // Include for pthreads
+#include<unistd.h>
 
 
 Universal::Universal(int n) {
@@ -17,17 +18,13 @@ Universal::Universal(int n) {
 }
 
 Response Universal::apply(Invoc invoc,int id) {
-    // Get the thread ID
-    // cout<<"a";
-    
-    // Loop through the array of threads to find the index of the current thread
-    // for (i = 0; i < n; i++) {
-    //     if (pthread_equal(threads[i], self)) {
-    //         break;
-    //     }
-    // }
-    // cout<<i<<"Hello";
-    announce[id] =new Node(invoc, this->n);
+    Response rsp;
+    std::lock_guard<std::mutex> lock(mutex);
+    [&](){
+    announce[id] = new Node(invoc, this->n);
+    Node* tmp = Node::max(head);
+    rsp.addArgument(tmp->seq);
+    }();
     head[id] = Node::max(head);
     while (announce[id]->seq == 0) {
         Node* before = head[id];
@@ -50,7 +47,6 @@ Response Universal::apply(Invoc invoc,int id) {
     }
     head[id] = announce[id];
     MyObject.apply(current->invoc);
-    Response rsp;
     rsp.addArgument(id);
     rsp.addArgument(head[id]->seq);
     return rsp;

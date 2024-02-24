@@ -1,6 +1,7 @@
 #include "LFUniversal.h"
 #include <iostream>
 #include <pthread.h> // Include for pthreads
+#include <mutex>
 
 
 LFUniversal::LFUniversal(int n) {
@@ -16,9 +17,14 @@ LFUniversal::LFUniversal(int n) {
 }
 
 Response LFUniversal::apply(Invoc invoc,int id) {
-
-    // cout<<i<<"Hello";
-    Node* prefer=new Node(invoc, this->n);
+    Response rsp;
+    Node* prefer;
+    std::lock_guard<std::mutex> lock(mutex);
+    [&](){
+    prefer= new Node(invoc, this->n);
+    Node* tmp = Node::max(head);
+    rsp.addArgument(tmp->seq);
+    }();
     while (prefer->seq == 0) {
         Node* before = Node::max(head);
         Node* after = before->decideNext.decide(prefer,id);
@@ -33,7 +39,6 @@ Response LFUniversal::apply(Invoc invoc,int id) {
         current = current->next;
     }
     MyObject.apply(current->invoc);
-    Response rsp;
     rsp.addArgument(id);
     rsp.addArgument(head[id]->seq);
     return rsp;

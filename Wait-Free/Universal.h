@@ -2,7 +2,8 @@
 #define UNIVERSAL_H
 #include<map>
 #include <vector>
-#include "Node.h"
+#include "../Node.h"
+#include<mutex>
 
 class Universal {
 private:
@@ -12,7 +13,6 @@ private:
     Node* tail;
 
 public:
-    std::map<int,int> mp;
     Universal(int n);
     Response apply(Invoc invoc,int id);
 };
